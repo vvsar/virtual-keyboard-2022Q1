@@ -7,17 +7,61 @@
 body {
   height: 100vh;
   display: flex;
+  flex-direction: column;
   background: #2F2F2F;
 
 }
 
 .text-input {
   width: 90%;
-  margin: 30px auto;
+  margin: 30px auto 0 auto;
   padding: 10px;
   font-size: 20px;
   height: calc(100vh - 500px);
   min-height: 250px;
   color: #ffffff;
   background: #000000;
+}
+
+.info-box {
+  width: 90%;
+  margin: 0 auto;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: transparent;
+}
+
+.win-logo {
+  display: block;
+  width: 120px;
+}
+
+.lang-sign {
+  width: 30px;
+  height: 25px;
+  border-radius: 3px;
+  text-align: center;
+  background: #00FF00;
+  color: #FF4500;
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 160%;
+}
+
+.shift-info {
+  font-family: Arial, sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  color: #4169E1;
+}
+
+.keys-container {
+  width: 100%;
+  padding: 100px 0 50px 0;
+  background: radial-gradient(at 50% 70%, #FF6347 30%, #2F2F2F 90%);
+  
+  user-select: none;
 }
