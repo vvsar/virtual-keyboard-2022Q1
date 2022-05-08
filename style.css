@@ -60,8 +60,53 @@ body {
 
 .keys-container {
   width: 100%;
-  padding: 100px 0 50px 0;
+  padding: 50px 0;
   background: radial-gradient(at 50% 70%, #FF6347 30%, #2F2F2F 90%);
-  
+  text-align: center;
   user-select: none;
+}
+
+.keyboard-key {
+  height: 45px;
+  width: 6%;
+  max-width: 90px;
+  margin: 3px;
+  border-radius: 4px;
+  border: none;
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  font-size: 1.05rem;
+  outline: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: top;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+  position: relative;
+}
+
+.keyboard-key-wide {
+  width: 12%;
+}
+
+.keyboard-key-space {
+  width: 36%;
+  max-width: 500px;
+}
+
+.keyboard-key-caps::after {
+  content: '';
+  top: 5px;
+  left: 20px;
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 50%;
+}
+
+.keyboard-key-caps-active::after {
+  background: #08ff00;
 }
