@@ -148,7 +148,6 @@ function createKeys() {
         keyElement.addEventListener("click", () => {
           let s = keyBoard.textarea.selectionStart;
           let e = keyBoard.textarea.selectionEnd;
-          // if (s === 0 && e === 0) return;
           if (s === e) {
             keyBoard.textarea.value = keyBoard.textarea.value.slice(0, s) + keyBoard.textarea.value.slice(e + 1);
             keyBoard.textarea.focus();
@@ -215,21 +214,57 @@ function createKeys() {
         keyElement.innerHTML = key.createIconHTML("arrow_back");
         keyElement.onmousedown = function() {keyElement.classList.add('keyboard-key-pressed')}
         keyElement.onmouseup = function() {keyElement.classList.remove('keyboard-key-pressed')}
-
+        keyElement.addEventListener("click", () => {
+          let s = keyBoard.textarea.selectionStart;
+          let e = keyBoard.textarea.selectionEnd;
+          if (s === 0 && e === 0) return;
+          if (s === e) {
+            keyBoard.textarea.focus();
+            keyBoard.textarea.selectionStart = s - 1;
+            keyBoard.textarea.selectionEnd = keyBoard.textarea.selectionStart;
+          } else {
+            keyBoard.textarea.focus();
+            keyBoard.textarea.selectionStart = s;
+            keyBoard.textarea.selectionEnd = keyBoard.textarea.selectionStart;
+          }
+        });
         break;
 
       case "ArrowRight":
         keyElement.innerHTML = key.createIconHTML("arrow_forward");
         keyElement.onmousedown = function() {keyElement.classList.add('keyboard-key-pressed')}
         keyElement.onmouseup = function() {keyElement.classList.remove('keyboard-key-pressed')}
-
+        keyElement.addEventListener("click", () => {
+          let s = keyBoard.textarea.selectionStart;
+          let e = keyBoard.textarea.selectionEnd;
+          if (s === e) {
+            keyBoard.textarea.focus();
+            keyBoard.textarea.selectionStart = s + 1;
+            keyBoard.textarea.selectionEnd = keyBoard.textarea.selectionStart;
+          } else {
+            keyBoard.textarea.focus();
+            keyBoard.textarea.selectionEnd = e;
+            keyBoard.textarea.selectionStart = keyBoard.textarea.selectionEnd;
+          }
+        });
         break;
 
       case "ArrowUp":
         keyElement.innerHTML = key.createIconHTML("arrow_upward");
         keyElement.onmousedown = function() {keyElement.classList.add('keyboard-key-pressed')}
         keyElement.onmouseup = function() {keyElement.classList.remove('keyboard-key-pressed')}
-  
+        // keyElement.addEventListener("click", () => {
+        //   let s = keyBoard.textarea.selectionStart;
+        //   let e = keyBoard.textarea.selectionEnd;
+        //   if (s <= keyBoard.textarea.cols) return;
+          
+        //     keyBoard.textarea.focus();
+        //     keyBoard.textarea.selectionStart = s - keyBoard.textarea.cols;
+        //     keyBoard.textarea.selectionEnd = keyBoard.textarea.selectionStart;
+          
+            
+          
+        // });
         break;
       
       case "ArrowDown":
