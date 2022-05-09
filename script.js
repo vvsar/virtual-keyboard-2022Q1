@@ -24,18 +24,18 @@ class Keyboard {
 const keySet = {
   'en': 
   [{x:['`', '~']}, {x:['1', '!']}, {x:['2', '@']}, {x:['3', '#']}, {x:['4', '$']}, {x:['5', '%']}, {x:['6', '^']}, 
-  {x:['7', '&']}, {x:['8', '*']}, {x:['9', '\(']}, {x:['0', ')']}, {x:['-', '_']}, {x:['=', '+']}, "backspace",
-  "caps", "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", {x:['[', '{']}, {x:[']', '}']}, "del",
-  "a", "s", "d", "f", "g", "h", "j", "k", "l", {x:[';', ':']}, {x:['\'', '"']}, {x:['\\', '|']}, "enter",
-  "leftShift", "z", "x", "c", "v", "b", "n", "m", {x:[',', '<']}, {x:['.', '>']}, {x:['/', '?']}, "rightShift",
-  "ctrl", "alt", "space", "left", "up", "right", "down"], 
+  {x:['7', '&']}, {x:['8', '*']}, {x:['9', '\(']}, {x:['0', ')']}, {x:['-', '_']}, {x:['=', '+']}, "Backspace",
+  "CapsLock", "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", {x:['[', '{']}, {x:[']', '}']}, "Del",
+  "a", "s", "d", "f", "g", "h", "j", "k", "l", {x:[';', ':']}, {x:['\'', '"']}, {x:['\\', '|']}, "Enter",
+  "ShiftLeft", "z", "x", "c", "v", "b", "n", "m", {x:[',', '<']}, {x:['.', '>']}, {x:['/', '?']}, "ShiftRight",
+  "Control", "Alt", "Space", "ArrowLeft", "ArrowUp", "ArrowRight", "ArrowDown"], 
   'ru': 
   ["ё", {x:['1', '!']}, {x:['2', '"']}, {x:['3', '№']}, {x:['4', ';']}, {x:['5', '%']}, {x:['6', ':']}, 
-  {x:['7', '?']}, {x:['8', '*']}, {x:['9', '\(']}, {x:['0', ')']}, {x:['-', '_']}, {x:['=', '+']}, "backspace", 
-  "caps", "й", "ц", "у", "к", "е", "н", "г", "ш", "щ", "з", "х", "ъ", "del", 
-  "ф", "ы", "в", "а", "п", "р", "о", "л", "д", "ж", "э", {x:['\\', '/']}, "enter", 
-  "leftShift", "я", "ч", "с", "м", "и", "т", "ь", "б", "ю", {x:['.', ',']}, "rightShift", 
-  "ctrl", "alt", "space", "left", "up", "right", "down"]
+  {x:['7', '?']}, {x:['8', '*']}, {x:['9', '\(']}, {x:['0', ')']}, {x:['-', '_']}, {x:['=', '+']}, "Backspace", 
+  "CapsLock", "й", "ц", "у", "к", "е", "н", "г", "ш", "щ", "з", "х", "ъ", "Del", 
+  "ф", "ы", "в", "а", "п", "р", "о", "л", "д", "ж", "э", {x:['\\', '/']}, "Enter", 
+  "ShiftLeft", "я", "ч", "с", "м", "и", "т", "ь", "б", "ю", {x:['.', ',']}, "ShiftRight", 
+  "Control", "Alt", "Space", "ArrowLeft", "ArrowUp", "ArrowRight", "ArrowDown"]
 };
 
 const keyBoard = new Keyboard();
@@ -95,32 +95,40 @@ function createKeys() {
     if (typeof keyName !== 'object') {
     switch (keyName) {
 
-      case "ctrl":
+      case "Control":
         keyElement.classList.add("keyboard-key-wide");
         keyElement.innerHTML = '<span>Ctrl</span>';
         keyElement.classList.add('ctrl');
-        // ctrl = document.querySelector('.ctrl');
-        // alert(ctrl);
         keyElement.addEventListener('click', () => {
           keyElement.isPressed = true;
           keyElement.classList.add('keyboard-key-pressed');
         })
-          
         break;
 
-      case "backspace":
+      case "Backspace":
         keyElement.classList.add("keyboard-key-wide");
         keyElement.innerHTML = key.createIconHTML("backspace");
         keyElement.onmousedown = function() {keyElement.classList.add('keyboard-key-pressed')}
         keyElement.onmouseup = function() {keyElement.classList.remove('keyboard-key-pressed')}
-        // key.addEventListener("click", () => {
-        //   this.properties.value = this.properties.value.substring(0, this.properties.value.length - 1);
-        //   this._triggerEvent("oninput");
-        // });
-
+        keyElement.addEventListener("click", () => {
+          let s = keyBoard.textarea.selectionStart;
+          let e = keyBoard.textarea.selectionEnd;
+          if (s === 0 && e === 0) return;
+          if (s === e) {
+            keyBoard.textarea.value = keyBoard.textarea.value.slice(0, s - 1) + keyBoard.textarea.value.slice(e);
+            keyBoard.textarea.focus();
+            keyBoard.textarea.selectionStart = s - 1;
+            keyBoard.textarea.selectionEnd = keyBoard.textarea.selectionStart;
+          } else {
+            keyBoard.textarea.value = keyBoard.textarea.value.slice(0, s) + keyBoard.textarea.value.slice(e);
+            keyBoard.textarea.focus();
+            keyBoard.textarea.selectionStart = s;
+            keyBoard.textarea.selectionEnd = keyBoard.textarea.selectionStart;
+          }
+        });
         break;
 
-      case "caps":
+      case "CapsLock":
         keyElement.classList.add("keyboard-key-wide", "keyboard-key-caps");
         keyElement.innerHTML = '<span>CapsLock</span>';
         keyElement.onmousedown = function() {keyElement.classList.add('keyboard-key-pressed')}
@@ -129,18 +137,33 @@ function createKeys() {
         keyElement.addEventListener("click", () => {
           toggleCapsLock();
           keyElement.classList.toggle("keyboard-key-caps-active", keyBoard.capsLock);
+          keyBoard.textarea.focus();
         });
-
         break;
 
-      case "del":
+      case "Del":
         keyElement.innerHTML = '<span>Del</span>';
         keyElement.onmousedown = function() {keyElement.classList.add('keyboard-key-pressed')}
         keyElement.onmouseup = function() {keyElement.classList.remove('keyboard-key-pressed')}
+        keyElement.addEventListener("click", () => {
+          let s = keyBoard.textarea.selectionStart;
+          let e = keyBoard.textarea.selectionEnd;
+          if (s === e) {
+            keyBoard.textarea.value = keyBoard.textarea.value.slice(0, s) + keyBoard.textarea.value.slice(e + 1);
+            keyBoard.textarea.focus();
+            keyBoard.textarea.selectionStart = s;
+            keyBoard.textarea.selectionEnd = keyBoard.textarea.selectionStart;
+          } else {
+            keyBoard.textarea.value = keyBoard.textarea.value.slice(0, s) + keyBoard.textarea.value.slice(e);
+            keyBoard.textarea.focus();
+            keyBoard.textarea.selectionStart = s;
+            keyBoard.textarea.selectionEnd = keyBoard.textarea.selectionStart;
+          }
+        });
         break;
 
-      case "leftShift":
-      case "rightShift":
+      case "ShiftLeft":
+      case "ShiftRight":
         keyElement.classList.add("keyboard-key-wide");
         keyElement.innerHTML = '<span>Shift</span>';
         keyElement.classList.add('shift');
@@ -154,30 +177,28 @@ function createKeys() {
             keyElement.classList.add('keyboard-key-pressed');
           }       
         });
-        
         break;
       
-      case "alt":
+      case "Alt":
         keyElement.classList.add("keyboard-key-wide");
         keyElement.innerHTML = '<span>Alt</span>';
         keyElement.setAttribute('id', 'alt');
         
-            
         break;
       
-      case "enter":
+      case "Enter":
         keyElement.classList.add("keyboard-key-wide");
         keyElement.innerHTML = key.createIconHTML("keyboard_return");
         keyElement.onmousedown = function() {keyElement.classList.add('keyboard-key-pressed')}
         keyElement.onmouseup = function() {keyElement.classList.remove('keyboard-key-pressed')}
-        // keyElement.addEventListener("click", () => {
-        //   this.properties.value += "\n";
-        //   this._triggerEvent("oninput");
-        // });
-
+        keyElement.addEventListener("click", () => {
+          keyBoard.textarea.value += "\n";
+          keyBoard.textarea.focus();
+        });
+        
         break;
 
-      case "space":
+      case "Space":
         keyElement.classList.add("keyboard-key-space");
         keyElement.innerHTML = key.createIconHTML("space_bar");
         keyElement.onmousedown = function() {keyElement.classList.add('keyboard-key-pressed')}
@@ -185,33 +206,68 @@ function createKeys() {
         keyElement.addEventListener("click", () => {
           keyBoard.textarea.value += " ";
           keyBoard.textarea.focus();
-          // this._triggerEvent("oninput");
-        });
 
+        });
         break;
 
-      case "left":
+      case "ArrowLeft":
         keyElement.innerHTML = key.createIconHTML("arrow_back");
         keyElement.onmousedown = function() {keyElement.classList.add('keyboard-key-pressed')}
         keyElement.onmouseup = function() {keyElement.classList.remove('keyboard-key-pressed')}
-
+        keyElement.addEventListener("click", () => {
+          let s = keyBoard.textarea.selectionStart;
+          let e = keyBoard.textarea.selectionEnd;
+          if (s === 0 && e === 0) return;
+          if (s === e) {
+            keyBoard.textarea.focus();
+            keyBoard.textarea.selectionStart = s - 1;
+            keyBoard.textarea.selectionEnd = keyBoard.textarea.selectionStart;
+          } else {
+            keyBoard.textarea.focus();
+            keyBoard.textarea.selectionStart = s;
+            keyBoard.textarea.selectionEnd = keyBoard.textarea.selectionStart;
+          }
+        });
         break;
 
-      case "right":
+      case "ArrowRight":
         keyElement.innerHTML = key.createIconHTML("arrow_forward");
         keyElement.onmousedown = function() {keyElement.classList.add('keyboard-key-pressed')}
         keyElement.onmouseup = function() {keyElement.classList.remove('keyboard-key-pressed')}
-
+        keyElement.addEventListener("click", () => {
+          let s = keyBoard.textarea.selectionStart;
+          let e = keyBoard.textarea.selectionEnd;
+          if (s === e) {
+            keyBoard.textarea.focus();
+            keyBoard.textarea.selectionStart = s + 1;
+            keyBoard.textarea.selectionEnd = keyBoard.textarea.selectionStart;
+          } else {
+            keyBoard.textarea.focus();
+            keyBoard.textarea.selectionEnd = e;
+            keyBoard.textarea.selectionStart = keyBoard.textarea.selectionEnd;
+          }
+        });
         break;
 
-      case "up":
+      case "ArrowUp":
         keyElement.innerHTML = key.createIconHTML("arrow_upward");
         keyElement.onmousedown = function() {keyElement.classList.add('keyboard-key-pressed')}
         keyElement.onmouseup = function() {keyElement.classList.remove('keyboard-key-pressed')}
-  
+        // keyElement.addEventListener("click", () => {
+        //   let s = keyBoard.textarea.selectionStart;
+        //   let e = keyBoard.textarea.selectionEnd;
+        //   if (s <= keyBoard.textarea.cols) return;
+          
+        //     keyBoard.textarea.focus();
+        //     keyBoard.textarea.selectionStart = s - keyBoard.textarea.cols;
+        //     keyBoard.textarea.selectionEnd = keyBoard.textarea.selectionStart;
+          
+            
+          
+        // });
         break;
       
-      case "down":
+      case "ArrowDown":
         keyElement.innerHTML = key.createIconHTML("arrow_downward");
         keyElement.onmousedown = function() {keyElement.classList.add('keyboard-key-pressed')}
         keyElement.onmouseup = function() {keyElement.classList.remove('keyboard-key-pressed')}
@@ -234,12 +290,9 @@ function createKeys() {
           } else {      
             keyBoard.textarea.value += key.name.toLowerCase();
           } 
-          document.querySelectorAll('.shift').forEach(el => {
-            el.isPressed = false;
-            el.classList.remove('keyboard-key-pressed');
-          });
+          unpressShift();
           keyBoard.textarea.focus();
-          // this._triggerEvent("oninput");
+          
         });
 
         break;
@@ -255,10 +308,7 @@ function createKeys() {
       keyElement.addEventListener("click", () => {
         if (document.querySelectorAll('.shift')[0].isPressed || document.querySelectorAll('.shift')[1].isPressed) {
           keyBoard.textarea.value += key.name.x[1];
-          document.querySelectorAll('.shift').forEach(el => {
-            el.isPressed = false;
-            el.classList.remove('keyboard-key-pressed');
-          });
+          unpressShift();
         } else {
           keyBoard.textarea.value += key.name.x[0];
         }
@@ -266,7 +316,16 @@ function createKeys() {
       });
     }
 
-    
+    document.addEventListener('keydown', (event) => {
+      if (keyElement.innerText === event.key || keyElement.innerText === event.key.toUpperCase()) {
+        keyElement.classList.add('keyboard-key-highlighted');
+      }
+    });
+    document.addEventListener('keyup', (event) => {
+      if (keyElement.innerText === event.key || keyElement.innerText === event.key.toUpperCase()) {
+        keyElement.classList.remove('keyboard-key-highlighted');
+      }
+    });
 
     fragment.appendChild(keyElement);
 
@@ -275,7 +334,7 @@ function createKeys() {
     }
   });
 
-
+  
 
   return fragment;
 }
@@ -307,6 +366,13 @@ function toggleEnRu() {
   keyBoard.keys_container.classList.add('keys-container');
   document.body.appendChild(keyBoard.keys_container);
   keyBoard.keys_container.appendChild(createKeys());
+}
+
+function unpressShift() {
+  document.querySelectorAll('.shift').forEach(el => {
+    el.isPressed = false;
+    el.classList.remove('keyboard-key-pressed');
+  });
 }
 
 keyboardInit();

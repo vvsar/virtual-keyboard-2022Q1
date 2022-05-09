@@ -21,6 +21,7 @@ body {
   min-height: 250px;
   color: #ffffff;
   background: #000000;
+  resize: none;
 }
 
 .info-box {
@@ -85,7 +86,7 @@ body {
   justify-content: center;
   vertical-align: top;
   padding: 0;
-  -webkit-tap-highlight-color: transparent;
+  /* -webkit-tap-highlight-color: transparent; */
   position: relative;
   box-shadow: inset 0 0 6px 1px rgb(255, 255, 255, 0.5);
 }
@@ -100,6 +101,10 @@ body {
 .keyboard-key-pressed {
   box-shadow: inset 0 0 6px 1px rgb(0, 0, 0, 0.5);
   transition: 0.1s;
+}
+
+.keyboard-key-highlighted {
+  background: rgba(0, 255, 255, 0.5);
 }
 
 .keyboard-key-wide {
