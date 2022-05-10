@@ -2,10 +2,10 @@ class Key {
   constructor(name) {
     document.createElement('button'),
     this.name = name,
-    this.icon = null
+    this.icon = null;
   }
-  createIconHTML(icon_name) {
-    this.icon = `<span class="material-icons">${icon_name}</span>`;
+  createIconHTML(iconName) {
+    this.icon = `<span class="material-icons">${iconName}</span>`;
     return this.icon;
   }
 }
@@ -17,26 +17,26 @@ class Keyboard {
     this.infoBox = null;
     this.language = '',
     this.cursorPos = 0,
-    this.capsLock = false
+    this.capsLock = false;
   }
 }
 
 const keySet = {
-  'en': 
-  [{x:['`', '~']}, {x:['1', '!']}, {x:['2', '@']}, {x:['3', '#']}, {x:['4', '$']}, {x:['5', '%']}, {x:['6', '^']}, 
-  {x:['7', '&']}, {x:['8', '*']}, {x:['9', '\(']}, {x:['0', ')']}, {x:['-', '_']}, {x:['=', '+']}, "Backspace",
-  "CapsLock", "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", {x:['[', '{']}, {x:[']', '}']}, "Del",
-  "a", "s", "d", "f", "g", "h", "j", "k", "l", {x:[';', ':']}, {x:['\'', '"']}, {x:['\\', '|']}, "Enter",
-  "ShiftLeft", "z", "x", "c", "v", "b", "n", "m", {x:[',', '<']}, {x:['.', '>']}, {x:['/', '?']}, "ShiftRight",
-  "Control", "Alt", "Space", "ArrowLeft", "ArrowUp", "ArrowRight", "ArrowDown"], 
-  'ru': 
-  ["ё", {x:['1', '!']}, {x:['2', '"']}, {x:['3', '№']}, {x:['4', ';']}, {x:['5', '%']}, {x:['6', ':']}, 
-  {x:['7', '?']}, {x:['8', '*']}, {x:['9', '\(']}, {x:['0', ')']}, {x:['-', '_']}, {x:['=', '+']}, "Backspace", 
-  "CapsLock", "й", "ц", "у", "к", "е", "н", "г", "ш", "щ", "з", "х", "ъ", "Del", 
-  "ф", "ы", "в", "а", "п", "р", "о", "л", "д", "ж", "э", {x:['\\', '/']}, "Enter", 
-  "ShiftLeft", "я", "ч", "с", "м", "и", "т", "ь", "б", "ю", {x:['.', ',']}, "ShiftRight", 
-  "Control", "Alt", "Space", "ArrowLeft", "ArrowUp", "ArrowRight", "ArrowDown"],
-  'codes':
+  en:
+  [{ x: ['`', '~'] }, { x: ['1', '!'] }, { x: ['2', '@'] }, { x: ['3', '#'] }, { x: ['4', '$'] }, { x: ['5', '%'] }, { x: ['6', '^'] },
+  { x: ['7', '&'] }, { x: ['8', '*'] }, { x: ['9', '\('] }, { x: ['0', ')'] }, { x: ['-', '_'] }, { x: ['=', '+'] }, 'Backspace',
+  'CapsLock', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', { x: ['[', '{'] }, { x: [']', '}'] }, 'Del',
+  'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', { x: [';', ':'] }, { x: ['\'', '"'] }, { x: ['\\', '|'] }, 'Enter',
+  'ShiftLeft', 'z', 'x', 'c', 'v', 'b', 'n', 'm', { x: [',', '<'] }, { x: ['.', '>'] }, { x: ['/', '?'] }, 'ShiftRight',
+  'Control', 'Alt', 'Space', 'ArrowLeft', 'ArrowUp', 'ArrowRight', 'ArrowDown'], 
+  ru:
+  ['ё', { x: ['1', '!'] }, { x: ['2', '"'] }, { x: ['3', '№'] }, { x: ['4', ';'] }, { x: ['5', '%'] }, { x: ['6', ':'] }, 
+  { x: ['7', '?'] }, { x: ['8', '*'] }, { x: ['9', '\('] }, { x: ['0', ')'] }, { x: ['-', '_'] }, { x: ['=', '+'] }, 'Backspace', 
+  'CapsLock', 'й', 'ц', 'у', 'к', 'е', 'н', 'г', 'ш', 'щ', 'з', 'х', 'ъ', 'Del', 
+  'ф', 'ы', 'в', 'а', 'п', 'р', 'о', 'л', 'д', 'ж', 'э', { x: ['\\', '/'] }, 'Enter', 
+  'ShiftLeft', 'я', 'ч', 'с', 'м', 'и', 'т', 'ь', 'б', 'ю', { x: ['.', ','] }, 'ShiftRight', 
+  'Control', 'Alt', 'Space', 'ArrowLeft', 'ArrowUp', 'ArrowRight', 'ArrowDown'],
+  codes:
   ['Backquote', 'Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 'Digit6', 
   'Digit7', 'Digit8', 'Digit9', 'Digit0', 'Minus', 'Equal', 'Backspace', 
   'CapsLock', 'KeyQ', 'KeyW', 'KeyE', 'KeyR', 'KeyT', 'KeyY', 'KeyU', 'KeyI', 'KeyO', 'KeyP', 'BracketLeft', 'BracketRight', 'Delete', 
@@ -284,7 +284,7 @@ function createKeys() {
         }
         keyElement.onmousedown = function() {keyElement.classList.add('keyboard-key-pressed')}
         keyElement.onmouseup = function() {keyElement.classList.remove('keyboard-key-pressed')}
-        keyElement.addEventListener("click", () => {
+        keyElement.addEventListener('click', () => {
           if (keyBoard.capsLock || document.querySelectorAll('.shift')[0].isPressed || document.querySelectorAll('.shift')[1].isPressed) {          
             keyBoard.textarea.value += key.name.toUpperCase();
           } else if (keyBoard.capsLock && (document.querySelectorAll('.shift')[0].isPressed || document.querySelectorAll('.shift')[1].isPressed)) {
@@ -304,9 +304,9 @@ function createKeys() {
       shiftSign.classList.add('keyboard-key-shift');
       shiftSign.textContent = key.name.x[1];
       keyElement.appendChild(shiftSign);
-      keyElement.onmousedown = function() {keyElement.classList.add('keyboard-key-pressed')}
-      keyElement.onmouseup = function() {keyElement.classList.remove('keyboard-key-pressed')}
-      keyElement.addEventListener("click", () => {
+      keyElement.onmousedown = function() { keyElement.classList.add('keyboard-key-pressed'); }
+      keyElement.onmouseup = function() { keyElement.classList.remove('keyboard-key-pressed'); }
+      keyElement.addEventListener('click', () => {
         if (document.querySelectorAll('.shift')[0].isPressed || document.querySelectorAll('.shift')[1].isPressed) {
           keyBoard.textarea.value += key.name.x[1];
           releaseCtrlAltShift();
@@ -331,7 +331,7 @@ function createKeys() {
     fragment.appendChild(keyElement);
 
     if (insertLineBreak) {
-      fragment.appendChild(document.createElement("br"));
+      fragment.appendChild(document.createElement('br'));
     }
   });
 
