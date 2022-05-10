@@ -35,7 +35,14 @@ const keySet = {
   "CapsLock", "й", "ц", "у", "к", "е", "н", "г", "ш", "щ", "з", "х", "ъ", "Del", 
   "ф", "ы", "в", "а", "п", "р", "о", "л", "д", "ж", "э", {x:['\\', '/']}, "Enter", 
   "ShiftLeft", "я", "ч", "с", "м", "и", "т", "ь", "б", "ю", {x:['.', ',']}, "ShiftRight", 
-  "Control", "Alt", "Space", "ArrowLeft", "ArrowUp", "ArrowRight", "ArrowDown"]
+  "Control", "Alt", "Space", "ArrowLeft", "ArrowUp", "ArrowRight", "ArrowDown"],
+  'codes':
+  ['Backquote', 'Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 'Digit6', 
+  'Digit7', 'Digit8', 'Digit9', 'Digit0', 'Minus', 'Equal', 'Backspace', 
+  'CapsLock', 'KeyQ', 'KeyW', 'KeyE', 'KeyR', 'KeyT', 'KeyY', 'KeyU', 'KeyI', 'KeyO', 'KeyP', 'BracketLeft', 'BracketRight', 'Delete', 
+  'KeyA', 'KeyS', 'KeyD', 'KeyF', 'KeyG', 'KeyH', 'KeyJ', 'KeyK', 'KeyL', 'Semicolon', 'Quote', 'Backslash', 'Enter', 
+  'ShiftLeft', 'KeyZ', 'KeyX', 'KeyC', 'KeyV', 'KeyB', 'KeyN', 'KeyM', 'Comma', 'Period', 'Slash', 'ShiftRight', 
+  'ControlLeft', 'AltLeft', 'Space', 'ArrowLeft', 'ArrowUp', 'ArrowRight', 'ArrowDown']
 };
 
 const keyBoard = new Keyboard();
@@ -90,6 +97,7 @@ function createKeys() {
     const key = new Key(keyName);
     keyElement.classList.add("keyboard-key");
     keyElement.isPressed = false;
+    keyElement.code = keySet.codes[keySet[`${keyBoard.language}`].indexOf(keyName)];
     const insertLineBreak = [currentLayout[13], currentLayout[27], currentLayout[40], currentLayout[52]].indexOf(keyName) !== -1;
 
     if (typeof keyName !== 'object') {
@@ -113,7 +121,7 @@ function createKeys() {
         keyElement.addEventListener("click", () => {
           let s = keyBoard.textarea.selectionStart;
           let e = keyBoard.textarea.selectionEnd;
-          if (s === 0 && e === 0) return;
+          if (s === 0 && e === 0) keyBoard.textarea.focus();;
           if (s === e) {
             keyBoard.textarea.value = keyBoard.textarea.value.slice(0, s - 1) + keyBoard.textarea.value.slice(e);
             keyBoard.textarea.focus();
@@ -182,8 +190,11 @@ function createKeys() {
       case "Alt":
         keyElement.classList.add("keyboard-key-wide");
         keyElement.innerHTML = '<span>Alt</span>';
-        keyElement.setAttribute('id', 'alt');
-        
+        keyElement.classList.add('alt');
+        keyElement.addEventListener('click', () => {
+          keyElement.isPressed = true;
+          keyElement.classList.add('keyboard-key-pressed');
+        })
         break;
       
       case "Enter":
@@ -217,7 +228,7 @@ function createKeys() {
         keyElement.addEventListener("click", () => {
           let s = keyBoard.textarea.selectionStart;
           let e = keyBoard.textarea.selectionEnd;
-          if (s === 0 && e === 0) return;
+          if (s === 0 && e === 0) keyBoard.textarea.focus();;
           if (s === e) {
             keyBoard.textarea.focus();
             keyBoard.textarea.selectionStart = s - 1;
@@ -227,6 +238,7 @@ function createKeys() {
             keyBoard.textarea.selectionStart = s;
             keyBoard.textarea.selectionEnd = keyBoard.textarea.selectionStart;
           }
+          releaseCtrlAltShift();
         });
         break;
 
@@ -246,6 +258,7 @@ function createKeys() {
             keyBoard.textarea.selectionEnd = e;
             keyBoard.textarea.selectionStart = keyBoard.textarea.selectionEnd;
           }
+          releaseCtrlAltShift();
         });
         break;
 
@@ -253,18 +266,7 @@ function createKeys() {
         keyElement.innerHTML = key.createIconHTML("arrow_upward");
         keyElement.onmousedown = function() {keyElement.classList.add('keyboard-key-pressed')}
         keyElement.onmouseup = function() {keyElement.classList.remove('keyboard-key-pressed')}
-        // keyElement.addEventListener("click", () => {
-        //   let s = keyBoard.textarea.selectionStart;
-        //   let e = keyBoard.textarea.selectionEnd;
-        //   if (s <= keyBoard.textarea.cols) return;
-          
-        //     keyBoard.textarea.focus();
-        //     keyBoard.textarea.selectionStart = s - keyBoard.textarea.cols;
-        //     keyBoard.textarea.selectionEnd = keyBoard.textarea.selectionStart;
-          
-            
-          
-        // });
+        
         break;
       
       case "ArrowDown":
@@ -290,9 +292,8 @@ function createKeys() {
           } else {      
             keyBoard.textarea.value += key.name.toLowerCase();
           } 
-          unpressShift();
+          releaseCtrlAltShift();
           keyBoard.textarea.focus();
-          
         });
 
         break;
@@ -308,7 +309,7 @@ function createKeys() {
       keyElement.addEventListener("click", () => {
         if (document.querySelectorAll('.shift')[0].isPressed || document.querySelectorAll('.shift')[1].isPressed) {
           keyBoard.textarea.value += key.name.x[1];
-          unpressShift();
+          releaseCtrlAltShift();
         } else {
           keyBoard.textarea.value += key.name.x[0];
         }
@@ -317,12 +318,12 @@ function createKeys() {
     }
 
     document.addEventListener('keydown', (event) => {
-      if (keyElement.innerText === event.key || keyElement.innerText === event.key.toUpperCase()) {
+      if (keyElement.code === event.code) {
         keyElement.classList.add('keyboard-key-highlighted');
       }
     });
     document.addEventListener('keyup', (event) => {
-      if (keyElement.innerText === event.key || keyElement.innerText === event.key.toUpperCase()) {
+      if (keyElement.code === event.code) {
         keyElement.classList.remove('keyboard-key-highlighted');
       }
     });
@@ -338,6 +339,8 @@ function createKeys() {
 
   return fragment;
 }
+
+
 
 function toggleCapsLock() {
   keyBoard.capsLock = !keyBoard.capsLock;    
@@ -368,11 +371,15 @@ function toggleEnRu() {
   keyBoard.keys_container.appendChild(createKeys());
 }
 
-function unpressShift() {
+function releaseCtrlAltShift() {
   document.querySelectorAll('.shift').forEach(el => {
     el.isPressed = false;
     el.classList.remove('keyboard-key-pressed');
   });
+  document.querySelector('.ctrl').isPressed = false;
+  document.querySelector('.ctrl').classList.remove('keyboard-key-pressed');
+  document.querySelector('.alt').isPressed = false;
+  document.querySelector('.alt').classList.remove('keyboard-key-pressed');
 }
 
 keyboardInit();
