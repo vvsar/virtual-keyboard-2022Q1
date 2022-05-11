@@ -229,8 +229,12 @@ function createKeys() {
           keyElement.onmousedown = function () { keyElement.classList.add('keyboard-key-pressed'); };
           keyElement.onmouseup = function () { keyElement.classList.remove('keyboard-key-pressed'); };
           keyElement.addEventListener('click', () => {
-            keyBoard.textarea.value += '\n';
+            const s = keyBoard.textarea.selectionStart;
+            const e = keyBoard.textarea.selectionEnd;
+            keyBoard.textarea.value = `${keyBoard.textarea.value.slice(0, s)}\n${keyBoard.textarea.value.slice(e)}`;
             keyBoard.textarea.focus();
+            keyBoard.textarea.selectionStart = s + 1;
+            keyBoard.textarea.selectionEnd = keyBoard.textarea.selectionStart;
           });
           break;
 
@@ -240,7 +244,11 @@ function createKeys() {
           keyElement.onmousedown = function () { keyElement.classList.add('keyboard-key-pressed'); };
           keyElement.onmouseup = function () { keyElement.classList.remove('keyboard-key-pressed'); };
           keyElement.addEventListener('click', () => {
-            keyBoard.textarea.value += ' ';
+            const s = keyBoard.textarea.selectionStart;
+            const e = keyBoard.textarea.selectionEnd;
+            keyBoard.textarea.value = `${keyBoard.textarea.value.slice(0, s)} ${keyBoard.textarea.value.slice(e)}`;
+            keyBoard.textarea.selectionStart = s + 1;
+            keyBoard.textarea.selectionEnd = keyBoard.textarea.selectionStart;
             keyBoard.textarea.focus();
           });
           break;
@@ -290,14 +298,14 @@ function createKeys() {
           keyElement.innerHTML = key.createIconHTML('arrow_upward');
           keyElement.onmousedown = function () { keyElement.classList.add('keyboard-key-pressed'); };
           keyElement.onmouseup = function () { keyElement.classList.remove('keyboard-key-pressed'); };
-
+          keyBoard.textarea.focus();
           break;
 
         case 'ArrowDown':
           keyElement.innerHTML = key.createIconHTML('arrow_downward');
           keyElement.onmousedown = function () { keyElement.classList.add('keyboard-key-pressed'); };
           keyElement.onmouseup = function () { keyElement.classList.remove('keyboard-key-pressed'); };
-
+          keyBoard.textarea.focus();
           break;
 
         default:
@@ -309,15 +317,19 @@ function createKeys() {
           keyElement.onmousedown = function () { keyElement.classList.add('keyboard-key-pressed'); };
           keyElement.onmouseup = function () { keyElement.classList.remove('keyboard-key-pressed'); };
           keyElement.addEventListener('click', () => {
+            const s = keyBoard.textarea.selectionStart;
+            const e = keyBoard.textarea.selectionEnd;
             if (keyBoard.capsLock && (document.querySelectorAll('.shift')[0].isPressed || document.querySelectorAll('.shift')[1].isPressed)) {
-              keyBoard.textarea.value += key.name.toLowerCase();
+              keyBoard.textarea.value = `${keyBoard.textarea.value.slice(0, s)}${key.name.toLowerCase()}${keyBoard.textarea.value.slice(e)}`;
             } else if (keyBoard.capsLock || document.querySelectorAll('.shift')[0].isPressed || document.querySelectorAll('.shift')[1].isPressed) {
-              keyBoard.textarea.value += key.name.toUpperCase();
+              keyBoard.textarea.value = `${keyBoard.textarea.value.slice(0, s)}${key.name.toUpperCase()}${keyBoard.textarea.value.slice(e)}`;
             } else {
-              keyBoard.textarea.value += key.name.toLowerCase();
+              keyBoard.textarea.value = `${keyBoard.textarea.value.slice(0, s)}${key.name.toLowerCase()}${keyBoard.textarea.value.slice(e)}`;
             }
             releaseCtrlAltShift();
             keyBoard.textarea.focus();
+            keyBoard.textarea.selectionStart = s + 1;
+            keyBoard.textarea.selectionEnd = keyBoard.textarea.selectionStart;
           });
           break;
       }
@@ -330,13 +342,17 @@ function createKeys() {
       keyElement.onmousedown = function () { keyElement.classList.add('keyboard-key-pressed'); };
       keyElement.onmouseup = function () { keyElement.classList.remove('keyboard-key-pressed'); };
       keyElement.addEventListener('click', () => {
+        const s = keyBoard.textarea.selectionStart;
+        const e = keyBoard.textarea.selectionEnd;
         if (document.querySelectorAll('.shift')[0].isPressed || document.querySelectorAll('.shift')[1].isPressed) {
-          keyBoard.textarea.value += key.name.x[1];
+          keyBoard.textarea.value = `${keyBoard.textarea.value.slice(0, s)}${key.name.x[1]}${keyBoard.textarea.value.slice(e)}`;
           releaseCtrlAltShift();
         } else {
-          keyBoard.textarea.value += key.name.x[0];
+          keyBoard.textarea.value = `${keyBoard.textarea.value.slice(0, s)}${key.name.x[0]}${keyBoard.textarea.value.slice(e)}`;
         }
         keyBoard.textarea.focus();
+        keyBoard.textarea.selectionStart = s + 1;
+        keyBoard.textarea.selectionEnd = keyBoard.textarea.selectionStart;
       });
     }
 
