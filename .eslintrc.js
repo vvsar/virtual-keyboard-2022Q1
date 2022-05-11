@@ -11,5 +11,10 @@ module.exports = {
     sourceType: 'module',
   },
   rules: {
+    'max-classes-per-file': ['error', 2],
+    'func-names': ['error', 'never'],
+    'no-param-reassign': ['error', { props: false }],
+    'no-use-before-define': ['error', { functions: false }],
+    'prefer-destructuring': ['error', { array: false }],
   },
 };
