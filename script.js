@@ -340,20 +340,19 @@ function createKeys() {
       });
     }
 
-    window.onkeydown = function (event) {
-      event.preventDefault();
-      if (keyElement.code === event.code) {
-        alert(keyElement.code);
-        keyElement.classList.add('keyboard-key-highlighted');
-        keyElement.click();
-      }
-    };
-    window.onkeyup = function (event) {
-      event.preventDefault();
-      if (keyElement.code === event.code) {
-        keyElement.classList.remove('keyboard-key-highlighted');
-      }
-    };
+    // window.addEventListener('keydown', (event) => {
+    //   event.preventDefault();
+    //   if (keyElement.code === event.code) {
+    //     keyElement.classList.add('keyboard-key-highlighted');
+    //     keyElement.click();
+    //   }
+    // });
+    // window.addEventListener('keyup', (event) => {
+    //   event.preventDefault();
+    //   if (keyElement.code === event.code) {
+    //     keyElement.classList.remove('keyboard-key-highlighted');
+    //   }
+    // });
 
     fragment.appendChild(keyElement);
     if (insertLineBreak) {
@@ -363,6 +362,25 @@ function createKeys() {
 
   return fragment;
 }
+
+window.addEventListener('keydown', (event) => {
+  event.preventDefault();
+  keyBoard.keys_container.childNodes.forEach((el) => {
+    if (el.code === event.code) {
+      el.classList.add('keyboard-key-highlighted');
+      el.click();
+    }
+  });
+});
+
+window.addEventListener('keyup', (event) => {
+  event.preventDefault();
+  keyBoard.keys_container.childNodes.forEach((el) => {
+    if (el.code === event.code) {
+      el.classList.remove('keyboard-key-highlighted');
+    }
+  });
+});
 
 function toggleEnRu() {
   if (keyBoard.language === 'en') {
